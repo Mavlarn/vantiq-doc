@@ -21,7 +21,7 @@ Vantiq的Pronto是一个Dynamic Advanced Event Broker​，为构建实时企业
 
 先创建ms_catalog，进入dev.vantiq.cn，打开"operations"进行namesp创建：
 
-![step1-namespace](3_vantiq_pronto_tutorial_multi_ns/step1-namespace.jpg.jpg?raw=true "namespace")
+![step1-namespace](3_vantiq_pronto_tutorial_multi_ns/step1-namespace.jpg?raw=true "namespace")
 
 打开namespace管理界面以后，点击"create"创建：
 
@@ -29,7 +29,7 @@ Vantiq的Pronto是一个Dynamic Advanced Event Broker​，为构建实时企业
 
 然后依次再创建其他3个namespace。然后，切换到这个新建的 ms_catalog namespace上：
 
-![step3-namespace-switch.jpg](3_vantiq_pronto_tutorial_multi_ns/step3-namespace-switch.jpg.jpg?raw=true "switch to catalog namespace")
+![step3-namespace-switch.jpg](3_vantiq_pronto_tutorial_multi_ns/step3-namespace-switch.jpg?raw=true "switch to catalog namespace")
 
 然后在ns列表中点击这个namespace，然后创建catalog：
 
@@ -40,7 +40,7 @@ Vantiq的Pronto是一个Dynamic Advanced Event Broker​，为构建实时企业
 2. 创建Event
 下面就开始创建事件Event。我们在创建Event之前，需要先给这个事件定义个Type，来作为事件消息的schema。打开development的Tab，点击Add，添加一个Type：
 
-![step5-catalog-create-type.jpg](3_vantiq_pronto_tutorial_multi_ns/step5-catalog-create-type.jpg?raw=true "Create Type")P
+![step5-catalog-create-type.jpg](3_vantiq_pronto_tutorial_multi_ns/step5-catalog-create-type.jpg?raw=true "Create Type")
 
 然后点击新建以后，在Type创建/编辑页面，输入Type的名字，设置属性：
 
