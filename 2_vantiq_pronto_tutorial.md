@@ -21,7 +21,7 @@ Modelo是一个可视化在线IDE，可以用来：
  * 进行数据的管理和数据对象结构(Schema)的管理
  * 创建各种Procedure、Rule等，用于在APP、Collaboration或其他地方进行数据处理和操作。
 
-## Pronto介绍
+### Pronto
 Pronto作为一个Event Broker​，相比其他开源的消息队列产品，或商用的Event Broker​产品，提供了很多独特或便捷的功能，包括：
  * 事件目录（Catalog），我们可以用它来查看所有的事件，通过事件属性和其他信息进行事件查找、过滤等，给事件定义schema。
  * 事件管理器（Manager），我们可以管理事件的订阅和发布，设置访问权限。
@@ -108,7 +108,7 @@ Pronto作为一个Event Broker​，相比其他开源的消息队列产品，�
 
 ![step14-subscription-open.jpg](2_vantiq_pronto_tutorial/step14-subscription-open.jpg?raw=true "Open Subscription")
 
-我们在刚才创建的订阅队列上创建订阅器，这样就可以在页面是看到队列上的消息。
+我们在刚才创建的订阅队列上创建订阅器，这样就可以在页面上看到队列上的消息。
 
 ![step15-subscription-create.jpg](2_vantiq_pronto_tutorial/step15-subscription-create.jpg?raw=true "Open Subscription")
 
@@ -120,4 +120,136 @@ Pronto作为一个Event Broker​，相比其他开源的消息队列产品，�
 
 ![step16-test-2.jpg](2_vantiq_pronto_tutorial/step16-test-2.jpg?raw=true "Open Subscription")
 
-至此就完成了Vantiq平台的设置，下面开始服务的开发。
+## 微服务开发
+至此就完成了Vantiq平台的设置，下面开始服务的开发。Vantiq提供了多种语言的SDK，包括Java、JavaScript、iOS等，也可以直接通过Vantiq的Rest API接口，来访问Vantiq服务。
+
+Vantiq Java SDK地址：  
+https://github.com/Vantiq/vantiq-sdk-java
+
+Rest API地址：  
+https://dev.vantiq.cn/docs/system/api/index.html
+
+### Java中使用Vantiq Java SDK
+在Java项目中，最简单的访问Vantiq的方法就是使用Vantiq提供的Java SDK，我们只需在Maven中引入依赖：
+```xml
+<repositories>
+    <repository>
+        <id>Vantiq Maven Repo</id>
+        <url>https://dl.bintray.com/vantiq/maven</url>
+    </repository>
+</repositories>
+
+<dependencies>
+    <dependency>
+        <groupId>io.vantiq</groupId>
+        <artifactId>vantiq-sdk</artifactId>
+        <version>1.0.17</version>
+        <scope>compile</scope>
+    </dependency>
+</dependencies>    
+```
+
+如果使用gradle，则是：
+```
+repositories {
+    maven {
+        url "https://dl.bintray.com/vantiq/maven"
+    }
+}
+
+dependencies {
+    compile 'io.vantiq:vantiq-sdk:1.0.17'
+}
+```
+
+然后，为了能够访问Vantiq，我们需要权限，我们可以使用用户名密码授权，也可以使用access token授权。如果在代码中暴露用户名和密码，肯定是不合适的，所以最好还是使用token。我们可以为每个namespace创建一个access token，这个token就能访问这个namespace的资源。所以就先创建一个token，还是打开vantiq的Operation的界面，这个界面显示的是当前用户拥有的所有的access token，可以看到，即使是创建者自己，在每个namespace都需要一个access token才能访问。
+
+![step17-access-token-open.jpg](2_vantiq_pronto_tutorial/step17-access-token-open.jpg?raw=true "Open access token")
+
+点击创建按钮，为微服务创建一个专用的access token：
+
+![step18-access-token-create.jpg](2_vantiq_pronto_tutorial/step18-access-token-create.jpg?raw=true "Create access token")
+
+创建完成以后，就可以看到新建的token，将这个token复制下来在java中使用。
+
+![step19-access-token-copy.jpg](2_vantiq_pronto_tutorial/step19-access-token-copy.jpg?raw=true "Create access token")
+
+### Java代码
+在Java中访问Vantiq的队列很简单，我们先来看看发布：
+
+```java
+    String TOKEN = "MXLzkzJE7P0f6whhTeKWn9qcuFRAuqIeqivLl8j7rl0="; // 上面创建的token
+    String VANTIQ_URL = "https://dev.vantiq.cn"; // 我们的测试服务器地址
+    String TOPIC_PUB = "/serviceA/domainAbc"; // 发布者队列
+
+    Vantiq vantiq = new Vantiq(VANTIQ_URL);
+    vantiq.setAccessToken(TOKEN);
+    Map event = new HashMap();
+    event.put("id", "112");
+    event.put("name", "name java 1");
+
+    vantiq.publish(Vantiq.SystemResources.TOPICS.value(), TOPIC_PUB, event, new BaseResponseHandler()
+    );
+```
+
+下面是订阅的代码：
+```java
+    String TOKEN = "MXLzkzJE7P0f6whhTeKWn9qcuFRAuqIeqivLl8j7rl0=";
+    String VANTIQ_URL = "https://dev.vantiq.cn"; // 我们的测试服务器地址
+    String TOPIC_SUB_1 = "/service1/DomainFoo"; // 订阅者队列1
+    String TOPIC_SUB_2 = "/service2/DomainBar"; // 订阅者队列2
+
+    Vantiq vantiq = new Vantiq(TestRestApi.VANTIQ_URL);
+    vantiq.setAccessToken(TestRestApi.TOKEN);
+    vantiq.subscribe(Vantiq.SystemResources.TOPICS.value(),
+            TestRestApi.TOPIC_SUB_1,
+            null,
+            new StandardOutputCallback(TestRestApi.TOPIC_SUB_1)
+    );
+```
+
+### 使用Rest API发布事件
+除了使用Vantiq SDK以外，我们也可以直接使用Rest API，它是一个Rest风格的WEB接口，我们可以在一些不方便添加java库的地方，或者在其他的一些系统中，使用这种方式访问Vantiq。下面是使用Java通过Rest接口提交事件的代码。
+
+```java
+
+    String TOKEN = "MXLzkzJE7P0f6whhTeKWn9qcuFRAuqIeqivLl8j7rl0=";
+    String VANTIQ_URL = "https://dev.vantiq.cn";
+    String TOPIC_PUB = "/serviceA/domainAbc";
+    String TOPIC_URL = VANTIQ_URL + "/api/v1/resources/topics/" + TOPIC_PUB + "?token=" + TOKEN;
+    JSONObject postJSON = new JSONObject();
+    postJSON.put("name", "Brett 1");
+    postJSON.put("id", "23456789");
+
+    String json = postJSON.toString();
+    try {
+        URL url = new URL(TOPIC_URL);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setConnectTimeout(5000);
+        conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+        conn.setDoOutput(true);
+        conn.setDoInput(true);
+        conn.setRequestMethod("POST");
+        OutputStream os = conn.getOutputStream();
+        os.write(json.getBytes("UTF-8"));
+        os.close();
+        // read the response
+        InputStream in = new BufferedInputStream(conn.getInputStream());
+
+        String result = IOUtils.toString(in, "UTF-8");
+        System.out.println(result);
+        System.out.println("Message Published");
+        in.close();
+        conn.disconnect();
+    } catch (Exception e) {
+        System.out.println(e);
+    }
+```
+
+有关Rest接口的详细文档，请参考官方文档（还未翻译成中文，会尽快翻译）：
+https://dev.vantiq.cn/docs/system/api/index.html
+
+### 在SAP中访问Rest API
+如果需要在SAP等系统中访问Vantiq，可以使用Vantiq是Rest接口进行，具体方法可以参考如下文章：
+https://blogs.sap.com/2013/01/24/developing-a-rest-api-in-abap/
+

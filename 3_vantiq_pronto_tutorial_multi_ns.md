@@ -1,41 +1,6 @@
-# 使用Vantiq事件驱动平台进行微服务开发
+# 使用Vantiq Pronto进行多namespace管理
 
-Vantiq的Pronto是一个Dynamic Advanced Event Broker​，为构建实时企业应用，提供一个动态的分布式的事件管理、监控、权限等功能。
-
-## Vantiq平台介绍
-Vantiq作为一个PaaS平台，用于快速开发、部署和运行任务关键型实时应用。该平台包含：
-1. 高生产力的可视化建模器（VANTIQ  Modelo），快速设计实时应用的功能，以复杂业务逻辑的简化规范转接界面脚本。
-2. 动态的高级事件Broker（Pronto），为构建实时企业应用提供事件驱动平台。
-3. 数据获取技术，获取各种企业内数据源，生成流数据，丰富上下文进行增强，过滤数据并将其转换为自动化决策引擎的事件。同时还能向数据源发送请求，进行各种自动化控制。
-4. 事件和情景分析引擎，实时分析数据并根据机器学习和基于规则分析的结果来推动业务决策。
-5. 协作技术，管理自动化系统和负责个人之间的协作，制定复杂情况的最优响应。
-
- 介绍，以及一些名词说明，如namespace、project，以及user的权限等
-### VANTIQ Modelo
-Modelo是一个可视化在线IDE，可以用来：
- * 创建数据处理流程（APP Module）
- * 创建客户端页面（Client Builder）
- * 创建和管理各种数据源，支持常见的Rest网络接口、JDBC、MQTT、Kafka、Email、短信、手机通知等等。
- * 管理事件的Topic
- * 创建人机交互的协作流程（Collaboration）
- * 进行数据的管理和数据对象结构(Schema)的管理
- * 创建各种Procedure、Rule等，用于在APP、Collaboration或其他地方进行数据处理和操作。
-
-## Pronto介绍
-Pronto作为一个Event Broker​，相比其他开源的消息队列产品，或商用的Event Broker​产品，提供了很多独特或便捷的功能，包括：
- * 事件目录（Catalog），我们可以用它来查看所有的事件，通过事件属性和其他信息进行事件查找、过滤等，给事件定义schema。
- * 事件管理器（Manager），我们可以管理事件的订阅和发布，设置访问权限。
- * 事件访问日志（Ledger），用于对所有的事件访问进行日志记录、权限控制。
- * 企业连接器（Enterprise Connector），我们还可以使用Vantiq平台的Source、Procedure、Rule等进行事件的自动处理、验证、设置规则等。
-
-使用Pronto作为事件驱动平台的vent Broker​，大致的流程如下：
-1. 定义事件的schema。在Vantiq里，几乎所有的数据都是以Json格式进行传输，Pronto里面的事件，也需要定义一个schema，这样我们就能通过schema属性查找事件。
-2. 定义Event，Pronto里面的Event相当于一个事件的定义，而不是具体发生的事件。所以，我们可以理解成这个Event实际上相当于一个事件队列，因为通常我们会把一种事件消息统一发到一个队列里。
-3. 定义该事件的发布者。一个事件的发布者就是一个队列，发布到这个队列的消息，就会发布到该事件上。该队列对这个发布者来说，应该是一个本地队列，其他的程序不应该针对这个队列有读写权限。
-4. 定义该事件的订阅者。事件的消费者也是一个队列，消费者从这个消费队列获得事件消息，改消费队列的事件是从这个事件来的。
-
-## Pronto Event Brokers使用实例
-下面，就通过一个完整的实例来看一下如果使用Pronto进行事件驱动开发。
+Vantiq的Pronto是一个Dynamic Advanced Event Broker​，为构建实时企业应用，提供一个动态的分布式的事件管理、监控、权限等功能。Pronto进行Event Catelog的权限管理，是通过namespace实现的。这篇文章我们就看看如何通过多个namespace来实现不同的服务访问Event时的权限控制。
 
 ### 场景描述
 该实例的场景描述如下：
@@ -96,11 +61,4 @@ Pronto作为一个Event Broker​，相比其他开源的消息队列产品，�
 3. 授权发布者和订阅者的namespace
 下面我们就需要让我们的发布者ServiceA所在的namespace和2个订阅者Service的namespace能够访问Event Catalog的事件。确保还在"ms_catalog"的namespace中，
 
-3. 创建发布者
-4. 创建订阅者
-5. 测试
-
-下面，就通过一个完整的实例来看一下如果使用Pronto进行事件驱动开发。该实例的场景描述如下：
- * 
-
-场景：统一的catelog，2个服务，
+。。。未完待续。。。
