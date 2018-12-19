@@ -1,12 +1,123 @@
-# Vantiq Pronto使用教程
+# 使用Vantiq事件驱动平台进行微服务开发
 
-Pronto是一个Dynamic Advanced Event Broker​，是Vantiq平台的事件驱动架构的基础。该文档将介绍pronto，以及如何基于pronto实现事件的管理、分发、
+Vantiq的Pronto是一个Dynamic Advanced Event Broker​，为构建实时企业应用，提供一个动态的分布式的事件管理、监控、权限等功能。
 
 ## Vantiq平台介绍
-Vantiq平台介绍，以及一些名词说明，如namespace、project，以及user的权限等
+Vantiq作为一个PaaS平台，用于快速开发、部署和运行任务关键型实时应用。该平台包含：
+1. 高生产力的可视化建模器（VANTIQ  Modelo），快速设计实时应用的功能，以复杂业务逻辑的简化规范转接界面脚本。
+2. 动态的高级事件Broker（Pronto），为构建实时企业应用提供事件驱动平台。
+3. 数据获取技术，获取各种企业内数据源，生成流数据，丰富上下文进行增强，过滤数据并将其转换为自动化决策引擎的事件。同时还能向数据源发送请求，进行各种自动化控制。
+4. 事件和情景分析引擎，实时分析数据并根据机器学习和基于规则分析的结果来推动业务决策。
+5. 协作技术，管理自动化系统和负责个人之间的协作，制定复杂情况的最优响应。
+
+ 介绍，以及一些名词说明，如namespace、project，以及user的权限等
+### VANTIQ Modelo
+Modelo是一个可视化在线IDE，可以用来：
+ * 创建数据处理流程（APP Module）
+ * 创建客户端页面（Client Builder）
+ * 创建和管理各种数据源，支持常见的Rest网络接口、JDBC、MQTT、Kafka、Email、短信、手机通知等等。
+ * 管理事件的Topic
+ * 创建人机交互的协作流程（Collaboration）
+ * 进行数据的管理和数据对象结构(Schema)的管理
+ * 创建各种Procedure、Rule等，用于在APP、Collaboration或其他地方进行数据处理和操作。
 
 ## Pronto介绍
+Pronto作为一个Event Broker​，相比其他开源的消息队列产品，或商用的Event Broker​产品，提供了很多独特或便捷的功能，包括：
+ * 事件目录（Catalog），我们可以用它来查看所有的事件，通过事件属性和其他信息进行事件查找、过滤等，给事件定义schema。
+ * 事件管理器（Manager），我们可以管理事件的订阅和发布，设置访问权限。
+ * 事件访问日志（Ledger），用于对所有的事件访问进行日志记录、权限控制。
+ * 企业连接器（Enterprise Connector），我们还可以使用Vantiq平台的Source、Procedure、Rule等进行事件的自动处理、验证、设置规则等。
+
+使用Pronto作为事件驱动平台的vent Broker​，大致的流程如下：
+1. 定义事件的schema。在Vantiq里，几乎所有的数据都是以Json格式进行传输，Pronto里面的事件，也需要定义一个schema，这样我们就能通过schema属性查找事件。
+2. 定义Event，Pronto里面的Event相当于一个事件的定义，而不是具体发生的事件。所以，我们可以理解成这个Event实际上相当于一个事件队列，因为通常我们会把一种事件消息统一发到一个队列里。
+3. 定义该事件的发布者。一个事件的发布者就是一个队列，发布到这个队列的消息，就会发布到该事件上。该队列对这个发布者来说，应该是一个本地队列，其他的程序不应该针对这个队列有读写权限。
+4. 定义该事件的订阅者。事件的消费者也是一个队列，消费者从这个消费队列获得事件消息，改消费队列的事件是从这个事件来的。
 
 ## Pronto Event Brokers使用实例
+下面，就通过一个完整的实例来看一下如果使用Pronto进行事件驱动开发。
 
-场景：统一的catelog，2个服务，
+### 场景描述
+该实例的场景描述如下：
+
+![pronto-event-pub-sub](2_vantiq_pronto_tutorial/pronto-event-pub-sub.jpg?raw=true "Printo-Event_Pub_Sub")
+
+在这个例子当中，有1个Event事件："/domainABC/eventABC"，它有一个发布者"/serviceA/domainAbc"，ServiceA服务的一个方法，通过发送消息到这个发布队列，来发布事件。它有2个订阅者，"/service1/DomainFoo"和"/service2/DomainBar"，分别由2个Service，通过这2个订阅队列来消费事件。
+
+接下来，我们就开始在Pronto里面创建namespace，Event，定义订阅者、发布者等。
+
+### 创建namespace
+我们先新建一个namespace，ms_catalog_tutorial，这需要一个拥有developer权限的用户。然后在operation Tab中创建：
+
+![step1-namespace-create](2_vantiq_pronto_tutorial/step1-namespace-create.jpg.jpg?raw=true "create namespace")
+
+创建好namespace以后，切换到新建的namespace：
+
+![step2-namespace-switch.jpg](2_vantiq_pronto_tutorial/step2-namespace-switch.jpg?raw=true "switch namespace")
+
+然后切换到新建的namespace，创建catalog。这样我们就能够在这个namespace创建和管理Event。
+
+![step3-catalog-create.jpg](2_vantiq_pronto_tutorial/step3-catalog-create.jpg.jpg?raw=true "create catalog")
+
+
+### 创建Event
+下面就开始创建事件Event。我们在创建Event之前，需要先给这个事件定义个Type，来作为事件消息的schema。打开development的Tab，点击Add，添加一个Type：
+
+![step4-type-open.jpg](2_vantiq_pronto_tutorial/step4-type-open.jpg?raw=true "Open Type")
+
+然后点击新建以后，在Type创建/编辑页面，输入Type的名字‘EventABC’, Role类型是Schema，添加2个属性id和name：
+
+![step5-type-create.jpg](2_vantiq_pronto_tutorial/step5-type-create.jpg?raw=true "Create Type")
+
+下面就打开'Event Catalog'页面来创建 新的Event：
+
+![step6-catalog-open.jpg](2_vantiq_pronto_tutorial/step6-catalog-open.jpg?raw=true "Open Catalog")
+
+输入该事件名字、描述、schema，然后保存：
+
+![step8-catalog-popup.jpg](2_vantiq_pronto_tutorial/step8-catalog-popup.jpg?raw=true "Save Catalog")
+
+点击保存以后，会弹出一个对话框，来设置该事件的关键字，用于进行事件的查询、过滤。
+
+![step8-catalog-popup.jpg](2_vantiq_pronto_tutorial/step8-catalog-popup.jpg?raw=true "Save Catalog")
+
+保存成功后就可以在Event Catalog界面看到新建的事件：
+
+![step9-catalog-list.jpg](2_vantiq_pronto_tutorial/step9-catalog-list.jpg?raw=true "Catalog Result")
+
+点击新建的Event，就可以打开Event的界面，在这里，我们可以针对这个Event创建订阅者和发布者：
+
+![step10-catalog-event.jpg](2_vantiq_pronto_tutorial/step10-catalog-event.jpg?raw=true "Catalog Event")
+
+点击publisher旁边的'click to view'，打开发布者，输入发布队列的名字，点‘become publisher’:
+
+![step11-catalog-event-publisher.jpg](2_vantiq_pronto_tutorial/step11-catalog-event-publisher.jpg?raw=true "Catalog Event Publisher")
+
+创建完成以后，就可以在下面的列表中看到发布者。我们的ServiceA会通过这个队列来发布事件。
+
+同样，创建2个订阅者，两个Service会通过这个订阅者订阅来订阅消息：
+
+![step12-catalog-event-subscriber.jpg](2_vantiq_pronto_tutorial/step12-catalog-event-subscriber.jpg?raw=true "Catalog Event Subscriber")
+
+至此，我们在Vantiq上需要的Event、队列等已经创建完成，我们可以通过 show - 'resource list' 来查看现在所有的资源：
+
+![step13-resource-list.jpg](2_vantiq_pronto_tutorial/step13-resource-list.jpg?raw=true "Resource List")
+
+### 测试事件的发布与订阅
+下面我们就通过发布者队列来发布一个事件消息，然后通过订阅者队列来查看这个事件。这样我们就能验证这个Event Catelog，和发布者、订阅者之间的关系。所以，我们需要先查看这个订阅者队列上的消息，这需要我们新建一个订阅器：
+
+![step14-subscription-open.jpg](2_vantiq_pronto_tutorial/step14-subscription-open.jpg?raw=true "Open Subscription")
+
+我们在刚才创建的订阅队列上创建订阅器，这样就可以在页面是看到队列上的消息。
+
+![step15-subscription-create.jpg](2_vantiq_pronto_tutorial/step15-subscription-create.jpg?raw=true "Open Subscription")
+
+下面从Resource List中分别打开发布者队列"/serviceA/domainAbc"，和两个订阅器："service1_DomainFoo_Sub"和"service2_DomainBar_Sub"。我们要在发布者队列的界面上发布一个消息，检查下面两个订阅器上是否有刚才创建的消息。
+
+![step16-test-1.jpg](2_vantiq_pronto_tutorial/step16-test-1.jpg?raw=true "Open Subscription")
+
+当我们在发布队列的界面里，输入发布的消息的内容以后，点击”Publish“，这个消息会被发送到发送至队列，并同步到两个订阅者队列。
+
+![step16-test-2.jpg](2_vantiq_pronto_tutorial/step16-test-2.jpg?raw=true "Open Subscription")
+
+至此就完成了Vantiq平台的设置，下面开始服务的开发。
