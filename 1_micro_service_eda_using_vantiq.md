@@ -28,16 +28,50 @@ Mediator模式就是增加了一个Mediator（协调者）的角色，他可能�
 
 这种模式的好处就是，每个服务，每个方法，只需要订阅一个自己的队列，根据里面事件的数据，来判断该事件的来源。这样就能进一步降低服务和事件直接的耦合性。这时候，这个事件和服务之间的耦合性，就放到了这个协调者（Mediator）上。但是，由于所有的耦合关系是在统一的一个地方保存，而不是分散在整个系统的多有的服务上，这在可维护性上还是有好处的。
 
-## Vantiq事件驱动架构平台（未完）
-Vantiq事件驱动架构平台介绍，Pronto(Dynamic Advanced Event Broker)介绍，功能，优点。
+## Vantiq事件驱动架构平台
+Vantiq作为一个PaaS平台，用于快速开发、部署和运行任务关键型实时应用。Vantiq平台的Pronto是一个Dynamic Advanced Event Broker​，为构建实时企业应用，提供一个动态的分布式的事件管理、监控、权限等功能。它为我们提供事件驱动的很多有用功能：
+ * 事件和队列的查看与管理，我们可以使用Event Catalog来查看、管理和查找事件队列。。
+ * 事件管理器（Manager），我们可以管理事件队列的订阅和发布，设置访问权限。
+ * 事件访问日志（Ledger），用于对所有的事件访问进行日志记录、权限控制。
+ * 企业连接器（Enterprise Connector），我们还可以使用Vantiq平台的Source、Procedure、Rule等进行事件的自动处理、验证、设置规则等。
 
-### 使用Vantiq实现Broker模式的事件驱动架构（未完）
-介绍实现方式，缺点。
+利用Vantiq平台以上的功能，我们就可以实现不同模式的事件驱动架构：
+1. 事件Broker模式：通过Vantiq的事件消息队列，作为Event Broker为微服务提供消息中间件。
+2. 流程编排的Mediator模式：通过事件流程编排，实现微服务之间的事件通信和业务编排，还可以在编排中使用Procedure、Rule等进行事件的自动处理、验证、设置规则等。
+3. 事件分发的Mediator模式：通过Event Catalog的事件分发，将发布的事件分发到多个订阅队列上。
+
+### 事件Broker模式
+Broker模式实际上就是使用Vantiq事件平台，作为一个消息队列服务器，每个服务都往一个或多个消息队列发布消息队列，所有的服务，也都是自己来订阅相应的队列来获取需要的事件消息。如下图所示：
+
+![Vantiq-broker](1_micro_service_eda_using_vantiq/Vantiq-broker.jpg?raw=true "Vantiq Broker模式")
+
+ServiceA里面的'DomainAbc'领域对象发生改变时，发送一个事件到队列'/serviceA/domainAbc'；而这个领域对象的事件，Service1需要对这个事件作出响应，所以这两个服务都订阅这个事件队列。
+
+ServiceB也是类似，只不过'DomainBar'领域对象产生的事件，Service1和Service2都需要响应，都需要订阅相应的队列。
+
+### 流程编排的Mediator模式
+上面说到，在Mediator模式中有一个集中的服务来进行事件流程的编辑，以及完成一些数据处理、规则验证等操作。在Vantiq平台中，我们可以使用 App建模工具，来创建一个流程。如下图所示：
+
+![Vantiq-app-model](1_micro_service_eda_using_vantiq/Vantiq-app-model.jpg?raw=true "Vantiq流程编排的Mediator模式")
+
+在上图中，ServiceA发布事件到'/serviceA/domainAbc'队列，在Vantiq平台中的一个App流程，被该事件触发，执行流程，根据业务需要，最终产生了2个事件，分别发送到'/service1/domainXX'队列和'/service2/domainYY'队列，最终Service1和Service2从这两个队列订阅消息来处理自己的业务。
+
+在这种使用方式当中，将事件流程的编排放在Vantiq当中，每个服务都只需要订阅自己的消息队列，当一个服务需要一种事件的时候，由流程编排器把这个事件发到它需要的队列上。这样，就实现了微服务之间的完全隔离，而不像上面的Broker模式那样，服务和队列之间的关系写在各个服务里。
 
 
-### 使用Vantiq实现Mediator模式的事件驱动架构（未完）
-使用Vantiq作为Mediator协调器，来编排、调度、协调事件。有两种方式：
-1. 使用流程编排，来实现当一个事件到达时，在Vantiq中编排流程，如先调用一个服务，根据结果再触发另一个事件等流程。
-2. 使用Pronto的事件管理。通过Pronto可以实现，当一个队列上有个事件产生时，可以将它分发到其他某些队列。例如，在上面订单、库存和用户服务的例子中，当有一个订单的时候，这个事件被分发到库存和用户的自己的队列，这样库存和用户服务只需要订阅自己的队列。（有点类似AMQP协议，一个Exchange，根据一定的binding规则，将接收到的消息分发到多个Queue当中。）
+### 事件分发的Mediator模式
+在大多数的时候，我们做事件流程的编排，实际上只是确定一个事件需要由哪些服务来消费，对于这一点，我们只需要使用AMQP就可以事件。
 
+AMQP就是通过设置一定的绑定规则，将收到的消息分发到多个队列上。在Vantiq，可以利用类似的思想，提供一种更好的实现。在这种模式当中，会有一个Event Catelog，它相当于事件类型的定义，我们可以将一个或多个队列设置为它的发布者队列，然后再给他设置一些消费者队列。大致如下：
+
+![Vantiq-event-catalog](1_micro_service_eda_using_vantiq/Vantiq-event-catalog.jpg?raw=true "Vantiq事件分发的Mediator模式")
+
+在这里，定义了一个事件: EventABC，它有一个发布者队列'/serviceA/domainAbc'，ServiceA通过这个发布队列来发布事件消息，它还有两个消费队列，'/service1/DomainFoo'和'/service2/DomainBar'，分别由Service1和Service2来消费。
+
+Vantiq平台不但提供了这种事件分发的功能，我们还能在Vantiq平台方便的查看、管理事件并设置权限，并查看某种事件的发布者、消费者，甚至还能够实时的看到事件的数据。
+
+## 三种实现方式的选择
+我们可以用上述几种方式实现实现驱动架构的系统，如果是很简单的微服务系统，可以用第一种方式使用，但是，如果事件和服务之间的关系比较复杂，就需要使用Mediator模式。
+
+由于Vantiq平台提供了非常方便的可视化工具来进行业务流程的开发，如果希望用Vantiq平台开发业务系统，同事有需要跟现有的微服务系统进行事件驱动的通信，那么使用流程编排的Mediator模式会更加方便，统一管理。如果公司内已经有了很强的开发团队，能够进行微服务系统的开发和运营，不希望将自己的业务流程又放在Vantiq里、又放在各个微服务里，那么就将Vantiq平台作为一个Advance Event Broker来使用，使用事件分发的Mediator模式来实现。
 
