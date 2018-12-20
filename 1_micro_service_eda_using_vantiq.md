@@ -45,7 +45,7 @@ Broker模式实际上就是使用Vantiq事件平台，作为一个消息队列�
 
 ![Vantiq-broker](1_micro_service_eda_using_vantiq/Vantiq-broker.jpg?raw=true "Vantiq Broker模式")
 
-ServiceA里面的'DomainAbc'领域对象发生改变时，发送一个事件到队列'/serviceA/domainAbc'；而这个领域对象的事件，Service1需要对这个事件作出响应，所以这两个服务都订阅这个事件队列。
+ServiceA里面的'DomainAbc'领域对象发生改变时，发送一个事件到队列'/serviceA/domainAbc'；而这个领域对象的事件，Service1需要对这个事件作出响应。
 
 ServiceB也是类似，只不过'DomainBar'领域对象产生的事件，Service1和Service2都需要响应，都需要订阅相应的队列。
 
