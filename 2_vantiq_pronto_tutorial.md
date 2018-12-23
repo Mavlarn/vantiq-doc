@@ -45,10 +45,12 @@ Pronto作为一个Event Broker​，相比其他开源的消息队列产品，�
 
 接下来，我们就开始在Pronto里面创建namespace，Event，定义订阅者、发布者等。
 
+>在切换不同的namespace的时候，一般都会提示是否保存当前的project，在Vantiq中，project是一个逻辑概念，我们用project来组织各种resources。当保存一个project时，就是保存这个project包含的resources，以及它在网页IDE中显示的状态，下次再打开，还能打开之前打开的东西。在我们的实例中，namespace中创建的Event、队列等在操作相应按钮的时候就已经创建，就保存在该namespace的resources中了，所以不需要再保存在某个项目中。如果想下次打开namespace的时候，打开之前打开的组件，那就可以创建一个项目保存下来。
+
 ### 创建namespace
 我们先新建一个namespace，ms_catalog_tutorial，这需要一个拥有developer权限的用户。然后在operation Tab中创建：
 
-![step1-namespace-create](2_vantiq_pronto_tutorial/step1-namespace-create.jpg.jpg?raw=true "create namespace")
+![step1-namespace-create](2_vantiq_pronto_tutorial/step1-namespace-create.jpg?raw=true "create namespace")
 
 创建好namespace以后，切换到新建的namespace：
 
@@ -56,7 +58,7 @@ Pronto作为一个Event Broker​，相比其他开源的消息队列产品，�
 
 然后切换到新建的namespace，创建catalog。这样我们就能够在这个namespace创建和管理Event。
 
-![step3-catalog-create.jpg](2_vantiq_pronto_tutorial/step3-catalog-create.jpg.jpg?raw=true "create catalog")
+![step3-catalog-create.jpg](2_vantiq_pronto_tutorial/step3-catalog-create.jpg?raw=true "create catalog")
 
 
 ### 创建Event
