@@ -77,7 +77,7 @@ Vantiq的Pronto是一个Dynamic Advanced Event Broker​，为构建实时企业
 
 创建好以后，在列表中找到这个token并复制：
 
-![step11-access-tokens-copy.jpg](3_vantiq_pronto_tutorial_multi_ns/step11-access-tokens-copy.jpg?raw=true "Copy Access Token")
+![step12-access-tokens-copy.jpg](3_vantiq_pronto_tutorial_multi_ns/step12-access-tokens-copy.jpg?raw=true "Copy Access Token")
 
 然后，我们进入ms_serviceA这个namespace，我们要在这个namespace中连接到ms_catalog中定义的Event Catalog。进入ms_serviceA这个namespace后，打开namespace列表，点击自己的namespace，设置链接：
 
