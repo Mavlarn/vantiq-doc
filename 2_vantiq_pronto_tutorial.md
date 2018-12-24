@@ -43,6 +43,8 @@ Pronto作为一个Event Broker​，相比其他开源的消息队列产品，�
 
 在这个例子当中，有1个Event事件："/domainABC/eventABC"，它有一个发布者"/serviceA/domainAbc"，ServiceA服务的一个方法，通过发送消息到这个发布队列，来发布事件。它有2个订阅者，"/service1/DomainFoo"和"/service2/DomainBar"，分别由2个Service，通过这2个订阅队列来消费事件。
 
+>在Vantiq Pronto平台，事件是一个事件类型的定义，不是具体的事件消息。服务也不是直接使用事件，而是通过在这个事件上创建订阅者、发布者来访问事件。一般来说，这些订阅者、发布者都是本地队列(Topic)，服务通过这个本地队列来发送、获取事件消息。
+
 接下来，我们就开始在Pronto里面创建namespace，Event，定义订阅者、发布者等。
 
 >在切换不同的namespace的时候，一般都会提示是否保存当前的project，在Vantiq中，project是一个逻辑概念，我们用project来组织各种resources。当保存一个project时，就是保存这个project包含的resources，以及它在网页IDE中显示的状态，下次再打开，还能打开之前打开的东西。在我们的实例中，namespace中创建的Event、队列等在操作相应按钮的时候就已经创建，就保存在该namespace的resources中了，所以不需要再保存在某个项目中。如果想下次打开namespace的时候，打开之前打开的组件，那就可以创建一个项目保存下来。

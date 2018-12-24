@@ -60,7 +60,7 @@ Vantiq的Pronto是一个Dynamic Advanced Event Broker​，为构建实时企业
 
 ![step8-catalog-create-catalog2.jpg](3_vantiq_pronto_tutorial_multi_ns/step8-catalog-create-catalog2.jpg?raw=true "Create Catelog")
 
-创建完2个Type，2个Event以后，应该是这样的，我们可以在Event Catalog界面的输入框输入事件名、字段、关键字来进行事件的查询。
+创建完2个Type，2个Event以后，应该是这样的，我们可以在Event Catalog界面的输入框输入事件名、字段、关键字来进行事件的查询。这是为了方便之后打开这个namespace的时候能打开之前打开的东西，可以选择保存项目。
 
 ![step9-catalog-create-catalog-list.jpg](3_vantiq_pronto_tutorial_multi_ns/step9-catalog-create-catalog-list.jpg?raw=true "Catelog List")
 
@@ -73,17 +73,17 @@ Vantiq的Pronto是一个Dynamic Advanced Event Broker​，为构建实时企业
 
 这里面列出的是先有所有的access token。access token的用处就是授权访问某一个namespace，所以我们要创建一个token给其他几个namespace，以让他们能访问这个namespace里面的Event Catalog。点击新建：
 
-![step11-access-tokens-create.jpg](3_vantiq_pronto_tutorial_multi_ns/step10-access-tokens-create.jpg?raw=true "Create Access Token")
+![step11-access-tokens-create.jpg](3_vantiq_pronto_tutorial_multi_ns/step11-access-tokens-create.jpg?raw=true "Create Access Token")
 
 创建好以后，在列表中找到这个token并复制：
 
 ![step12-access-tokens-copy.jpg](3_vantiq_pronto_tutorial_multi_ns/step12-access-tokens-copy.jpg?raw=true "Copy Access Token")
 
-然后，我们进入ms_serviceA这个namespace，我们要在这个namespace中连接到ms_catalog中定义的Event Catalog。进入ms_serviceA这个namespace后，打开namespace列表，点击自己的namespace，设置链接：
+然后，我们进入ms_serviceA这个namespace，我们要在这个namespace中连接到ms_catalog中定义的Event Catalog。进入ms_serviceA这个namespace后，打开namespace列表，点击自己的namespace，设置Event Catalog链接：
 
 ![step13-link-catalog-namespace.jpg](3_vantiq_pronto_tutorial_multi_ns/step13-link-catalog-namespace.jpg?raw=true "Link Event Catalog")
 
-然后在弹出的对话框里拷贝刚才复制的token，然后点击"Add Catalog"来添加链接。添加成功后，会在下面显示链接到的namespace名字，确保
+然后在弹出的对话框里复制刚才拷贝的token，然后点击"Add Catalog"来添加链接。添加成功后，会在下面显示链接到的namespace名字，确保
 
 ![step14-link-catalog-namespace-result.jpg](3_vantiq_pronto_tutorial_multi_ns/step14-link-catalog-namespace-result.jpg?raw=true "Link Event Catalog Result")
 
