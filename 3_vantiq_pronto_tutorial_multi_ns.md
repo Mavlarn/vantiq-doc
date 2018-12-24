@@ -8,8 +8,8 @@ Vantiq的Pronto是一个Dynamic Advanced Event Broker​，为构建实时企业
 ![pronto-event-pub-sub](3_vantiq_pronto_tutorial_multi_ns/pronto-event-pub-sub.jpg?raw=true "Printo-Event_Pub_Sub")
 
 在这个例子当中，有2个Event：
- * 事件"/domainAbc/eventAA"，它有一个发布者"/serviceA/domainAbc"，ServiceA服务的一个方法，通过发送消息到这个发布队列，来发布事件。它有2个订阅者，"/service1/DomainFoo"和"/service2/DomainBar"，分别由2个Service，通过这个订阅队列来消费事件。
- * 事件"/domainEFG/eventEE"，它有一个发布者"/serviceA/domainEFG"，和一个订阅者"/service2/DomainGo"，他们分别由ServiceA发布和Service2订阅。
+ * 事件"`/domainAbc/eventAA`"，它有一个发布者"`/serviceA/domainAbc`"，`ServiceA`服务的一个方法，通过发送消息到这个发布队列，来发布事件。它有2个订阅者，"`/service1/DomainFoo`"和"`/service2/DomainBar`"，分别由2个Service，通过这个订阅队列来消费事件。
+ * 事件"`/domainEFG/eventEE`"，它有一个发布者"/`serviceA/domainEFG`"，和一个订阅者"`/service2/DomainGo`"，他们分别由`ServiceA`发布和`Service2`订阅。
 
 同时，不同的Service只能访问自己的namespace里面的订阅者和发布者，我们可以通过这个来控制服务对事件权限。
 
@@ -19,9 +19,9 @@ Vantiq的Pronto是一个Dynamic Advanced Event Broker​，为构建实时企业
 
 ### 创建namespace
 
-这个例子中，我们要使用4个namespace，分别叫"ms_catalog"，"ms_serviceA"，"ms_service1"和"ms_service2"。
+这个例子中，我们要使用4个namespace，分别叫"`ms_catalog`"，"`ms_serviceA`"，"`ms_service1`"和"`ms_service2`"。
 
-先创建ms_catalog，进入dev.vantiq.cn，打开"operations"进行namesp创建：
+先创建`ms_catalog`，进入dev.vantiq.cn，打开"operations"进行namesp创建：
 
 ![step1-namespace](3_vantiq_pronto_tutorial_multi_ns/step1-namespace.jpg?raw=true "namespace")
 
@@ -29,17 +29,17 @@ Vantiq的Pronto是一个Dynamic Advanced Event Broker​，为构建实时企业
 
 ![step2-namespace-create.jpg](3_vantiq_pronto_tutorial_multi_ns/step2-namespace-create.jpg?raw=true "create namespace")
 
-然后依次再创建其他3个namespace。然后，切换到这个新建的 ms_catalog namespace上：
+然后依次再创建其他3个namespace。然后，切换到这个新建的 `ms_catalog` namespace上：
 
 ![step3-namespace-switch.jpg](3_vantiq_pronto_tutorial_multi_ns/step3-namespace-switch.jpg?raw=true "switch to catalog namespace")
 
 ### Pronto Event Catalog
 
-创建好namespace以后，进入ms_catalog这个namespace，我们将要在这个namespace里面创建Catalog。在Administer里面打开namespace列表，从里面打开ms_catalog这个namespace：
+创建好namespace以后，进入`ms_catalog`这个namespace，我们将要在这个namespace里面创建Catalog。在Administer里面打开namespace列表，从里面打开`ms_catalog`这个namespace：
 
 ![step4-namespace-create-catalog.jpg](3_vantiq_pronto_tutorial_multi_ns/step4-namespace-create-catalog.jpg?raw=true "Create catalog")
 
->注意，我们只需要在ms_catalog这个namespace上创建catalog，其他的几个都不需要。其他的namespace会通过access token的方式授权访问这个catalog namespace，并使用这个里面的事件定义。
+>注意，我们只需要在`ms_catalog`这个namespace上创建catalog，其他的几个都不需要。其他的namespace会通过access token的方式授权访问这个catalog namespace，并使用这个里面的事件定义。
 
 下面就开始创建事件Event。我们在创建Event之前，需要先给这个事件定义个Type，来作为事件消息的schema。打开development的Tab，点击Add，添加一个Type：
 
@@ -49,7 +49,7 @@ Vantiq的Pronto是一个Dynamic Advanced Event Broker​，为构建实时企业
 
 ![step6-catalog-create-type-properties.jpg](3_vantiq_pronto_tutorial_multi_ns/step6-catalog-create-type-properties.jpg?raw=true "Create Type 2")
 
-然后，再创建一个EventEE，属性也是id, name。
+然后，再创建一个`EventEE`，属性也是id, name。
 
 现在就可以创建Event了，在Show下面找到Event Catelog并打开，点新建来创建：
 
@@ -67,7 +67,7 @@ Vantiq的Pronto是一个Dynamic Advanced Event Broker​，为构建实时企业
 
 
 ### 授权发布者和订阅者的namespace
-下面我们就需要让我们的发布者ServiceA所在的namespace和2个订阅者Service的namespace能够访问Event Catalog的事件。确保还在"ms_catalog"的namespace中，打开access tokens界面：
+下面我们就需要让我们的发布者`ServiceA`所在的namespace和2个订阅者Service的namespace能够访问Event Catalog的事件。确保还在"`ms_catalog`"的namespace中，打开access tokens界面：
 
 ![step10-access-tokens-open.jpg](3_vantiq_pronto_tutorial_multi_ns/step10-access-tokens-open.jpg?raw=true "Open Access Tokens")
 
@@ -79,7 +79,7 @@ Vantiq的Pronto是一个Dynamic Advanced Event Broker​，为构建实时企业
 
 ![step12-access-tokens-copy.jpg](3_vantiq_pronto_tutorial_multi_ns/step12-access-tokens-copy.jpg?raw=true "Copy Access Token")
 
-然后，我们进入ms_serviceA这个namespace，我们要在这个namespace中连接到ms_catalog中定义的Event Catalog。进入ms_serviceA这个namespace后，打开namespace列表，点击自己的namespace，设置Event Catalog链接：
+然后，我们进入`ms_serviceA`这个namespace，我们要在这个namespace中连接到`ms_catalog`中定义的Event Catalog。进入`ms_serviceA`这个namespace后，打开namespace列表，点击自己的namespace，设置Event Catalog链接：
 
 ![step13-link-catalog-namespace.jpg](3_vantiq_pronto_tutorial_multi_ns/step13-link-catalog-namespace.jpg?raw=true "Link Event Catalog")
 
@@ -87,16 +87,16 @@ Vantiq的Pronto是一个Dynamic Advanced Event Broker​，为构建实时企业
 
 ![step14-link-catalog-namespace-result.jpg](3_vantiq_pronto_tutorial_multi_ns/step14-link-catalog-namespace-result.jpg?raw=true "Link Event Catalog Result")
 
-为Service1和Service2进行同样的操作，这样，我们的3个服务使用的namespace对Catalog所在的namespace的授权就进行完了。
+为`Service1`和`Service2`进行同样的操作，这样，我们的3个服务使用的namespace对Catalog所在的namespace的授权就进行完了。
 
 ### 创建事件发布者
-完成了所有的service所在的命名空间对Catalog命名空间的授权以后，我们就来创建事件的发布者。在这个例子中，ServiceA这个服务能够发布这两个事件，所以我们需要在'ms_serviceA'这个命名空间中针对这两个事件创建发布者队列。这样ServiceA这个服务就能够空间它的发布者队列，发送消息到事件上。
+完成了所有的service所在的命名空间对Catalog命名空间的授权以后，我们就来创建事件的发布者。在这个例子中，`ServiceA`这个服务能够发布这两个事件，所以我们需要在'`ms_serviceA`'这个命名空间中针对这两个事件创建发布者队列。这样`ServiceA`这个服务就能够空间它的发布者队列，发送消息到事件上。
 
-所以，进入'ms_serviceA'命名空间，打开Event Catalog，点击一个事件，查看事件的发布者：
+所以，进入'`ms_serviceA`'命名空间，打开Event Catalog，点击一个事件，查看事件的发布者：
 
 ![step15-event-publisher-view.jpg](3_vantiq_pronto_tutorial_multi_ns/step15-event-publisher-view.jpg?raw=true "Event Publisher View")
 
-在弹出的对话框中，我们可以看到目前这个事件的所有发布者，目前是没有任何发布者的，它可能弹出一个窗口警告说没有找到发布者。我们可以通过一个Source来发布事件，也可以通过一个Topic队列来发布。我们选择Topic。数据我们的之前定义好的队列名'/serviceA/domainAbc'。这个队列名的命名是说'serviceA'的'domainAbc'领域对象发生变化，产生的事件。
+在弹出的对话框中，我们可以看到目前这个事件的所有发布者，目前是没有任何发布者的，它可能弹出一个窗口警告说没有找到发布者。我们可以通过一个Source来发布事件，也可以通过一个Topic队列来发布。我们选择Topic。数据我们的之前定义好的队列名'`/serviceA/domainAbc`'。这个队列名的命名是说'`serviceA'的'domainAbc`'领域对象发生变化，产生的事件。
 
 ![step16-event-publisher-add.jpg](3_vantiq_pronto_tutorial_multi_ns/step16-event-publisher-add.jpg?raw=true "Event Publisher View")
 
@@ -106,23 +106,23 @@ Vantiq的Pronto是一个Dynamic Advanced Event Broker​，为构建实时企业
 
 >注意这里，'Local Event Path'意思就是在ms_serviceA这个namespace里面，发布事件使用的队列，这个队列的名字前面自动加上了'/topics'的前缀。
 
-同样，我们也给'/domainEFG/eventEE'这个事件加上发布者队列'/serviceA/domainEFG'。
+同样，我们也给'`/domainEFG/eventEE`'这个事件加上发布者队列'`/serviceA/domainEFG`'。
 
 ### 创建事件订阅者
-跟创建发布者队列类似，我们现在进入'ms_service1'这个命名空间，由于'Service1'只需要订阅事件'/domainAbc/eventAA'，所以只是在这个事件上创建一个订阅者。打开Event Catalog，点击这个事件，查看事件的订阅者：
+跟创建发布者队列类似，我们现在进入'`ms_service1`'这个命名空间，由于'`Service1`'只需要订阅事件'`/domainAbc/eventAA`'，所以只是在这个事件上创建一个订阅者。打开Event Catalog，点击这个事件，查看事件的订阅者：
 
 ![step18-event-subscription-view.jpg](3_vantiq_pronto_tutorial_multi_ns/step18-event-subscription-view.jpg?raw=true "Event Publisher <rp></rp>esult")
 
-在弹出的对话框中输入队列名'/service1/DomainFoo'创建，可以看到下面的结果：
+在弹出的对话框中输入队列名'`/service1/DomainFoo`'创建，可以看到下面的结果：
 
 ![step19-event-subscription-view.jpg](3_vantiq_pronto_tutorial_multi_ns/step19-event-subscription-view.jpg?raw=true "Event Publisher <rp></rp>esult")
 
->这里的'Local Event'就是针对'ms_service1'这个命名空间本地队列，创建完以后，它的名字前不会添加前缀。如果需要命名统一，可以自行添加。
+>这里的'Local Event'就是针对'`ms_service1`'这个命名空间本地队列，创建完以后，它的名字前不会添加前缀。如果需要命名统一，可以自行添加。
 
-同样，进入'ms_service2'这个命名空间，Serice2在两个事件上都需要订阅，所以要创建2个订阅者队列，也就是对事件'/domainAbc/eventAA'，订阅者是'/service2/DomainBar'，对事件'/domainEFG/eventEE'订阅者是'/service2/DomainGo'。
+同样，进入'`ms_service2`'这个命名空间，`Serice2`在两个事件上都需要订阅，所以要创建2个订阅者队列，也就是对事件'`/domainAbc/eventAA`'，订阅者是'`/service2/DomainBar`'，对事件'`/domainEFG/eventEE`'订阅者是'`/service2/DomainGo`'。
 
 ### 在Catelog中查看发布、订阅
-我们创建完了发布者、订阅者，下面就能在'ms_catalog'命名空间中查看我们的事件，以及这些事件上的发布者、订阅者。如果有一些服务不应该对某些事件进行订阅，就可以在这里看到并删除。
+我们创建完了发布者、订阅者，下面就能在'`ms_catalog`'命名空间中查看我们的事件，以及这些事件上的发布者、订阅者。如果有一些服务不应该对某些事件进行订阅，就可以在这里看到并删除。
 
 这样，我们在企业范围内的所有事件都可以在一个地方统一的管理，并通过图形界面的方式查看、搜索，查看数据，查看发布者、订阅者等。
 
