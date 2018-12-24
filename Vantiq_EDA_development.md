@@ -8,7 +8,7 @@ Vantiq是一个事件驱动的，用于实现企业实时应用的快速开发�
 
 本文介绍了事件驱动架构，以及事件驱动架构的几种实现模式。并介绍了使用Vantiq实现事件驱动架构的几种实现模式。
 
-[v2. 使用Vantiq事件驱动平台进行微服务开发](2_vantiq_pronto_tutorial.md)
+[2. 使用Vantiq事件驱动平台进行微服务开发](2_vantiq_pronto_tutorial.md)
 
 本文介绍了Vantiq的Pronto平台(Dynamic Advanced Event Broker​)，并通过一个详尽的实例，介绍如何使用Pronto进行事件驱动的微服务开发。
 
