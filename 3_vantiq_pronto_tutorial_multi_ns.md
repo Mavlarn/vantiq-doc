@@ -1,6 +1,6 @@
 # 使用Vantiq Pronto进行多namespace管理
 
-Vantiq的Pronto是一个Dynamic Advanced Event Broker​，为构建实时企业应用，提供一个动态的分布式的事件管理、监控、权限等功能。Pronto进行Event Catelog的权限管理，是通过namespace实现的。这篇文章我们就看看如何通过多个namespace来实现不同的服务访问Event时的权限控制。
+Vantiq的Pronto是一个Dynamic Advanced Event Broker​，为构建实时企业应用，提供一个动态的分布式的事件管理、监控、权限等功能。Pronto进行Event Catalog的权限管理，是通过namespace实现的。这篇文章我们就看看如何通过多个namespace来实现不同的服务访问Event时的权限控制。
 
 ### 场景描述
 该实例的场景描述如下：
@@ -51,18 +51,18 @@ Vantiq的Pronto是一个Dynamic Advanced Event Broker​，为构建实时企业
 
 然后，再创建一个`EventEE`，属性也是id, name。
 
-现在就可以创建Event了，在Show下面找到Event Catelog并打开，点新建来创建：
+现在就可以创建Event了，在Show下面找到Event Catalog并打开，点新建来创建：
 
 ![step7-catalog-create-catalog1.jpg](3_vantiq_pronto_tutorial_multi_ns/step7-catalog-create-catalog1.jpg?raw=true "Create Type 2")
 
 
 输入相应的内容，保存的时候会弹出对话框设置关键字，这个关键字是用于查询过滤等。
 
-![step8-catalog-create-catalog2.jpg](3_vantiq_pronto_tutorial_multi_ns/step8-catalog-create-catalog2.jpg?raw=true "Create Catelog")
+![step8-catalog-create-catalog2.jpg](3_vantiq_pronto_tutorial_multi_ns/step8-catalog-create-catalog2.jpg?raw=true "Create Catalog")
 
 创建完2个Type，2个Event以后，应该是这样的，我们可以在Event Catalog界面的输入框输入事件名、字段、关键字来进行事件的查询。这是为了方便之后打开这个namespace的时候能打开之前打开的东西，可以选择保存项目。
 
-![step9-catalog-create-catalog-list.jpg](3_vantiq_pronto_tutorial_multi_ns/step9-catalog-create-catalog-list.jpg?raw=true "Catelog List")
+![step9-catalog-create-catalog-list.jpg](3_vantiq_pronto_tutorial_multi_ns/step9-catalog-create-catalog-list.jpg?raw=true "Catalog List")
 
 
 
@@ -121,7 +121,7 @@ Vantiq的Pronto是一个Dynamic Advanced Event Broker​，为构建实时企业
 
 同样，进入'`ms_service2`'这个命名空间，`Serice2`在两个事件上都需要订阅，所以要创建2个订阅者队列，也就是对事件'`/domainAbc/eventAA`'，订阅者是'`/service2/DomainBar`'，对事件'`/domainEFG/eventEE`'订阅者是'`/service2/DomainGo`'。
 
-### 在Catelog中查看发布、订阅
+### 在Catalog中查看发布、订阅
 我们创建完了发布者、订阅者，下面就能在'`ms_catalog`'命名空间中查看我们的事件，以及这些事件上的发布者、订阅者。如果有一些服务不应该对某些事件进行订阅，就可以在这里看到并删除。
 
 这样，我们在企业范围内的所有事件都可以在一个地方统一的管理，并通过图形界面的方式查看、搜索，查看数据，查看发布者、订阅者等。

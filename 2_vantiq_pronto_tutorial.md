@@ -31,7 +31,7 @@ Pronto作为一个Event Broker​，相比其他开源的消息队列产品，�
 1. 定义事件的schema。在Vantiq里，几乎所有的数据都是以Json格式进行传输，Pronto里面的事件，也需要定义一个schema，这样我们就能通过schema属性查找事件。
 2. 定义Event，Pronto里面的Event相当于一个事件的定义，而不是具体发生的事件。所以，我们可以理解成这个Event实际上相当于一个事件队列，因为通常我们会把一种事件消息统一发到一个队列里。
 3. 定义该事件的发布者。一个事件的发布者就是一个队列，发布到这个队列的消息，就会发布到该事件上。该队列对这个发布者来说，应该是一个本地队列，其他的程序不应该针对这个队列有读写权限。
-4. 定义该事件的订阅者。事件的消费者也是一个队列，消费者从这个消费队列获得事件消息，改消费队列的事件是从这个事件来的。
+4. 定义该事件的订阅者。事件的消费者也是一个队列，消费者从这个消费队列获得事件消息，该消费队列的事件是从这个事件来的。
 
 ## Pronto Event Brokers使用实例
 下面，就通过一个完整的实例来看一下如果使用Pronto进行事件驱动开发。
@@ -82,7 +82,7 @@ Pronto作为一个Event Broker​，相比其他开源的消息队列产品，�
 
 点击保存以后，会弹出一个对话框，来设置该事件的关键字，用于进行事件的查询、过滤。
 
-![step8-catalog-popup.jpg](2_vantiq_pronto_tutorial/step8-catalog-popup.jpg?raw=true "Save Catalog")
+![step8-catalog-popup.jpg](2_vantiq_pronto_tutorial/step8-catalog-popup.jpg?raw=true "Save Catalog Popup")
 
 保存成功后就可以在Event Catalog界面看到新建的事件：
 
