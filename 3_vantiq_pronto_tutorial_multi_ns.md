@@ -12,6 +12,7 @@ Vantiq的Pronto是一个Dynamic Advanced Event Broker​，为构建实时企业
  * 事件"`/domainEFG/eventEE`"，它有一个发布者"/`serviceA/domainEFG`"，和一个订阅者"`/service2/DomainGo`"，他们分别由`ServiceA`发布和`Service2`订阅。
 
 同时，不同的Service只能访问自己的namespace里面的订阅者和发布者，我们可以通过这个来控制服务对事件权限。
+>在vantiq中，我们还可以通过用户组来控制一个namespace中的不同用户组，对不同的event事件的权限。但是在这个例子中，由于我们想通过不同的namespace隔离不同的服务能够访问的本地队列，所以，使用namespace进行权限隔离。
 
 在下面的步骤当中，我们需要创建namespace，然后在pronto里面创建Event，定义订阅者、发布者，再进行授权。
 

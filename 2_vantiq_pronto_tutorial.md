@@ -78,7 +78,7 @@ Pronto作为一个Event Broker​，相比其他开源的消息队列产品，�
 
 输入该事件名字、描述、schema，然后保存：
 
-![step8-catalog-popup.jpg](2_vantiq_pronto_tutorial/step8-catalog-popup.jpg?raw=true "Save Catalog")
+![step7-catalog-create.jpg](2_vantiq_pronto_tutorial/step7-catalog-create.jpg?raw=true "Create Catalog")
 
 点击保存以后，会弹出一个对话框，来设置该事件的关键字，用于进行事件的查询、过滤。
 
